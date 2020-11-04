@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Test_task
+namespace TestTask
 {
     class StateMatrix
     {
         private List<List<int>> resources = new List<List<int>>(); //Матрица представлена набором векторов в виде List<int>
-        public int lsize { get; set; } //Размерность матрицы по горизонтали представлена наименьшей длинной среди всех векторов
-        private void calcLSize() //Вычисление наименьшей длины для векторов
+        public int Lsize { get; set; } //Размерность матрицы по горизонтали представлена наименьшей длинной среди всех векторов
+        private void CalcLSize() //Вычисление наименьшей длины для векторов
         {
             int size = int.MaxValue;
             foreach (List<int> temp in resources)
             {
                 if (temp.Count < size) size = temp.Count;
             }
-            lsize = size;
+            Lsize = size;
         }
-        public void addResource(List<int> temp) //Добавление вектора
+        public void AddResource(List<int> temp) //Добавление вектора
         {
             resources.Add(temp);
-            calcLSize();
+            CalcLSize();
         }
         public List<int> this[int index] //индексатор для получения столбцов как List<int>
         {
@@ -34,11 +34,11 @@ namespace Test_task
                 return temp;
             }
         }
-        public Column getColumn(int index) //Получение столбца в виде объекта Column черещ индексатор
+        public Column GetColumn(int index) //Получение столбца в виде объекта Column черещ индексатор
         {
             Column temp = new Column(this[index], index);
             return temp;
         }
     }
-    
+
 }

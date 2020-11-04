@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Test_task
+namespace TestTask
 {
     class Column
     {
@@ -12,13 +12,8 @@ namespace Test_task
             Index = index;
         }
         public int this[int index] //индексатор
-        {
-            get
-            {
-                return Numbers[index];
-            }
-        }
-        public List<int> Numbers { get; set; } 
+=> Numbers[index];
+        public List<int> Numbers { get; set; }
         public int Index { get; set; } //Индекс столбца из матрицы
         public int Count { get => Numbers.Count; }
     }

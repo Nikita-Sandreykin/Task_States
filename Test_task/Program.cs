@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
-namespace Test_task
+namespace TestTask
 {
     class Program
     {
@@ -13,26 +13,25 @@ namespace Test_task
             using (StreamReader sr = new StreamReader(@"input.txt", System.Text.Encoding.Default))
             {
                 string str;
-                while((str = sr.ReadLine()) != null)
+                while ((str = sr.ReadLine()) != null)
                 {
-                    List<int> test = TextConvert.strToListState(str); //Конвертация из строки в вектор для матрицы в виде List<int>
-                    matrix.addResource(test);
+                    List<int> test = TextConvert.StrToListState(str); //Конвертация из строки в вектор для матрицы в виде List<int>
+                    matrix.AddResource(test);
                 }
             }
-            Result result = new Result(matrix.lsize); //Создание объекта для выходного вектора с общими состояниями ресурсов
+            Result result = new Result(matrix.Lsize); //Создание объекта для выходного вектора с общими состояниями ресурсов
             List<Thread> threads = new List<Thread>(); //Создание списка объектов потоков для анализа столбцов матрицы
-            for(int i = 0; i < matrix.lsize; i++) //Создание потока для каждого столбца матрицы
+            for (int i = 0; i < matrix.Lsize; i++) //Создание потока для каждого столбца матрицы
             {
-                Thread temp = new Thread(new ParameterizedThreadStart(result.checkColumn)); //Используется делегат ParameterizedThreadStart для передачи столбца матрицы в поток
-                Column column = matrix.getColumn(i); //Получение стоблца по индексу из матрцы
+                Thread temp = new Thread(new ParameterizedThreadStart(result.CheckColumn)); //Используется делегат ParameterizedThreadStart для передачи столбца матрицы в поток
+                Column column = matrix.GetColumn(i); //Получение стоблца по индексу из матрцы
                 temp.Start(column); //Старт потока
                 temp.Join(); //Блокировка главного потока до завершения проверки столбцов
             }
             using (StreamWriter sw = new StreamWriter(@"output.txt", false, System.Text.Encoding.Default))
             {
-                sw.WriteLine(TextConvert.listStateToStr(result.results)); //Конвертация из List<int> в нужный формат на выходе в файл; запись в файт
+                sw.WriteLine(TextConvert.ListStateToStr(result.Results)); //Конвертация из List<int> в нужный формат на выходе в файл; запись в файт
             }
-            //Console.WriteLine(TextConvert.listStateToStr(result.results));
         }
     }
 }

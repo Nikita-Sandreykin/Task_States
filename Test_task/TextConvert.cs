@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Test_task
+namespace TestTask
 {
     class TextConvert
     {
-        public static void StrToState(string str, out int S, out int count)
+        public static void StrToState(string str, out int S, out int count) //Преобразовение состояния в виде строки в номер состояния и количество моментов времени этого состояния
         {
             Regex regex = new Regex(@"(\d+)"); 
             MatchCollection matches = regex.Matches(str);
@@ -21,7 +21,7 @@ namespace Test_task
                 S = -1; count = -1;
             }
         }
-        public static List<int> strToListState(string str) //Получение числового вектора из набора состояний для ресурса из строки
+        public static List<int> StrToListState(string str) //Получение числового вектора из набора состояний для ресурса из строки
         {
             Regex regex = new Regex(@"S\d*{\d*,\d*}"); //Регулярное выражение для состояний
             MatchCollection matches = regex.Matches(str);
@@ -37,45 +37,45 @@ namespace Test_task
             }
             return resource;
         }
-        public static string listStateToStr(List<int> resultStates) //Анализ выходного вектора для получения списка общих состояний в виде Sn(a,b)
+        public static string ListStateToStr(List<int> resultStates) //Анализ выходного вектора для получения списка общих состояний в виде Sn(a,b)
         {
             string result = "", temp = "";
-            int pState = 0;
-            int s = 1, f = 1;
+            int previosState = 0;
+            int startTime = 1, finishTime = 1;
             for (int i = 0; i < resultStates.Count; i++) //Проход по вектору для сбора идущих подряд состояний для последовательных моментов времени в вид Sn(a,b)
             {
-                if (resultStates[i] != 0 && pState == resultStates[i] && i != resultStates.Count - 1)
+                if (resultStates[i] != 0 && previosState == resultStates[i] && i != resultStates.Count - 1)
                 {
-                    f++;
-                    pState = resultStates[i];
+                    finishTime++;
+                    previosState = resultStates[i];
                 }
-                if (resultStates[i] != 0 && pState == resultStates[i] && i == resultStates.Count - 1)
+                if (resultStates[i] != 0 && previosState == resultStates[i] && i == resultStates.Count - 1)
                 {
-                    temp = "S" + pState + "{" + s + "," + (f + 1).ToString() + "} ";
+                    temp = $"S{previosState}{{{startTime},{(finishTime + 1).ToString()}}} ";
                     result += temp;
                 }
-                if (pState != resultStates[i] && resultStates[i] != 0)
+                if (previosState != resultStates[i] && resultStates[i] != 0)
                 {
-                    temp = "S" + pState + "{" + s + "," + f + "} ";
+                    temp = $"S{previosState}{{{startTime},{finishTime}}} ";
                     result += temp;
-                    s = i + 1; f = i + 1; pState = resultStates[i];
+                    startTime = i + 1; finishTime = i + 1; previosState = resultStates[i];
                 }
-                if (pState != resultStates[i] && resultStates[i] == 0)
+                if (previosState != resultStates[i] && resultStates[i] == 0)
                 {
-                    temp = "S" + pState + "{" + s + "," + f + "} ";
+                    temp = $"S{previosState}{{{startTime},{finishTime}}} ";
                     result += temp;
-                    pState = 0;
+                    previosState = 0;
                 }
-                if (resultStates[i] != 0 && pState == 0)
+                if (resultStates[i] != 0 && previosState == 0)
                 {
-                    s = i + 1; f = i + 1; pState = resultStates[i];
+                    startTime = i + 1; finishTime = i + 1; previosState = resultStates[i];
                 }
             }
             Regex regex = new Regex(@"S0{\d+,\d+} "); //Регулярные выражения для нулевых состояний, означающие отстутвие общего состояния на данный момент времени
             MatchCollection matches = regex.Matches(result);
-            foreach(Match a in matches)
+            foreach(Match match in matches)
             {
-                result = result.Replace(a.Value, ""); //Удаление нулевых состояний
+                result = result.Replace(match.Value, ""); //Удаление нулевых состояний
             }
             return result;
         }
